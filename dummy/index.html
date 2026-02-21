@@ -825,6 +825,38 @@
       color: var(--accent);
     }
 
+    .my-list-item .item-docs {
+      width: 100%;
+      margin-top: 0.5rem;
+      padding-top: 0.5rem;
+      border-top: 1px solid var(--border);
+      font-size: 0.85rem;
+    }
+
+    .my-list-item .item-docs-label {
+      color: var(--text-muted);
+      margin-bottom: 0.35rem;
+    }
+
+    .my-list-item .doc-list {
+      list-style: none;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
+    .my-list-item .doc-link {
+      color: var(--accent);
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.25rem;
+    }
+
+    .my-list-item .doc-link:hover {
+      text-decoration: underline;
+    }
+
     /* Foto-Upload Krankmeldung */
     .upload-zone {
       border: 2px dashed var(--border);
@@ -1129,6 +1161,13 @@
               <div>
                 <div class="item-title">Agile Methoden – Scrum</div>
                 <div class="item-meta">Externe Schulung · 17.03. – 18.03.2026</div>
+                <div class="item-docs">
+                  <div class="item-docs-label">Unterlagen</div>
+                  <ul class="doc-list">
+                    <li><a href="#" class="doc-link">📄 Kursübersicht_Scrum.pdf</a></li>
+                    <li><a href="#" class="doc-link">📄 Teilnahmebestätigung.pdf</a></li>
+                  </ul>
+                </div>
               </div>
               <span class="item-status genehmigt">Genehmigt</span>
             </div>
@@ -1136,6 +1175,12 @@
               <div>
                 <div class="item-title">Sicherheitsschulung IT</div>
                 <div class="item-meta">Online-Kurs · 01.04. – 02.04.2026</div>
+                <div class="item-docs">
+                  <div class="item-docs-label">Unterlagen</div>
+                  <ul class="doc-list">
+                    <li><a href="#" class="doc-link">📄 Zugangsdaten und Ablauf.pdf</a></li>
+                  </ul>
+                </div>
               </div>
               <span class="item-status">Offen</span>
               <button type="button" class="item-cancel" aria-label="Antrag zurückziehen">Zurückziehen</button>
@@ -1144,6 +1189,13 @@
               <div>
                 <div class="item-title">Projektmanagement Grundlagen</div>
                 <div class="item-meta">Konferenz · 12.02. – 13.02.2026</div>
+                <div class="item-docs">
+                  <div class="item-docs-label">Unterlagen</div>
+                  <ul class="doc-list">
+                    <li><a href="#" class="doc-link">📄 Konferenzprogramm.pdf</a></li>
+                    <li><a href="#" class="doc-link">📄 Handout_PM-Basics.pdf</a></li>
+                  </ul>
+                </div>
               </div>
               <span class="item-status genehmigt">Genehmigt</span>
             </div>
@@ -1276,6 +1328,13 @@
               <div>
                 <div class="item-title">Kundenbesuch München</div>
                 <div class="item-meta">Bahn · 24.02. – 25.02.2026</div>
+                <div class="item-docs">
+                  <div class="item-docs-label">Reisedokumente</div>
+                  <ul class="doc-list">
+                    <li><a href="#" class="doc-link">📄 Fahrkarte_Hin- und Rückfahrt.pdf</a></li>
+                    <li><a href="#" class="doc-link">📄 Hotelrechnung_München.pdf</a></li>
+                  </ul>
+                </div>
               </div>
               <span class="item-status genehmigt">Genehmigt</span>
             </div>
@@ -1283,6 +1342,12 @@
               <div>
                 <div class="item-title">Messe Hannover</div>
                 <div class="item-meta">Pkw · 10.03. – 12.03.2026</div>
+                <div class="item-docs">
+                  <div class="item-docs-label">Reisedokumente</div>
+                  <ul class="doc-list">
+                    <li><a href="#" class="doc-link">📄 Tankbelege.pdf</a></li>
+                  </ul>
+                </div>
               </div>
               <span class="item-status">Offen</span>
               <button type="button" class="item-cancel" aria-label="Dienstreise stornieren">Stornieren</button>
@@ -1291,6 +1356,13 @@
               <div>
                 <div class="item-title">Schulung Berlin</div>
                 <div class="item-meta">Bahn · 05.02. – 06.02.2026</div>
+                <div class="item-docs">
+                  <div class="item-docs-label">Reisedokumente</div>
+                  <ul class="doc-list">
+                    <li><a href="#" class="doc-link">📄 DB-Fahrkarte.pdf</a></li>
+                    <li><a href="#" class="doc-link">📄 Teilnahmebestätigung.pdf</a></li>
+                  </ul>
+                </div>
               </div>
               <span class="item-status genehmigt">Genehmigt</span>
             </div>
