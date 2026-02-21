@@ -40,6 +40,40 @@
       padding-bottom: env(safe-area-inset-bottom, 0);
     }
 
+    /* Barrierefreiheit: Fokus sichtbar, Skip-Link */
+    :focus {
+      outline: 2px solid var(--accent);
+      outline-offset: 2px;
+    }
+
+    :focus:not(:focus-visible) {
+      outline: none;
+    }
+
+    :focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 2px;
+    }
+
+    .skip-link {
+      position: absolute;
+      top: -3rem;
+      left: 1rem;
+      padding: 0.75rem 1rem;
+      background: var(--accent);
+      color: white;
+      font-weight: 600;
+      text-decoration: none;
+      border-radius: var(--radius);
+      z-index: 200;
+      transition: top 0.2s;
+    }
+
+    .skip-link:focus {
+      top: 1rem;
+      top: calc(1rem + env(safe-area-inset-top, 0));
+    }
+
     /* ========== MOBILE FIRST: Layout ========== */
     .app {
       min-height: 100vh;
@@ -967,38 +1001,39 @@
   </style>
 </head>
 <body>
+  <a href="#main-content" class="skip-link">Zum Inhalt springen</a>
   <div class="app">
-    <aside class="sidebar">
-      <div class="logo">PR<span>IMA</span></div>
-      <nav>
-        <button type="button" class="nav-item active" data-screen="dashboard">
-          <span class="nav-icon">🏠</span>
+    <aside class="sidebar" aria-label="Seitennavigation">
+      <div class="logo" aria-hidden="true">PR<span>IMA</span></div>
+      <nav aria-label="Hauptmenü">
+        <button type="button" class="nav-item active" data-screen="dashboard" aria-current="page">
+          <span class="nav-icon" aria-hidden="true">🏠</span>
           Übersicht
         </button>
         <button type="button" class="nav-item" data-screen="stoerung">
-          <span class="nav-icon">⚠️</span>
+          <span class="nav-icon" aria-hidden="true">⚠️</span>
           Störung melden
         </button>
         <button type="button" class="nav-item" data-screen="fortbildung">
-          <span class="nav-icon">📚</span>
+          <span class="nav-icon" aria-hidden="true">📚</span>
           Fortbildung
         </button>
         <button type="button" class="nav-item" data-screen="raum">
-          <span class="nav-icon">🚪</span>
+          <span class="nav-icon" aria-hidden="true">🚪</span>
           Raum buchen
         </button>
         <button type="button" class="nav-item" data-screen="dienstreise">
-          <span class="nav-icon">✈️</span>
+          <span class="nav-icon" aria-hidden="true">✈️</span>
           Dienstreise
         </button>
         <button type="button" class="nav-item" data-screen="meldung">
-          <span class="nav-icon">🏥</span>
+          <span class="nav-icon" aria-hidden="true">🏥</span>
           Krank- & Gesundmeldung
         </button>
       </nav>
     </aside>
 
-    <main class="main">
+    <main id="main-content" class="main" role="main" aria-label="Hauptinhalt">
       <header class="topbar">
         <div class="logo">PR<span>IMA</span></div>
         <button type="button" class="menu-toggle" id="menu-toggle" aria-label="Menü ausblenden" title="Menü ausblenden">
@@ -1018,34 +1053,34 @@
         </div>
       </header>
       <!-- Dashboard -->
-      <section id="screen-dashboard" class="screen active">
+      <section id="screen-dashboard" class="screen active" aria-labelledby="heading-dashboard">
         <div class="welcome">
-          <h1>Willkommen zurück</h1>
+          <h1 id="heading-dashboard" tabindex="-1">Willkommen zurück</h1>
           <p>Wählen Sie einen Service – alles aus einer Hand.</p>
         </div>
         <div class="cards">
-          <a href="#" class="card" data-screen="stoerung">
-            <div class="card-icon">⚠️</div>
+          <a href="#main-content" class="card" data-screen="stoerung" aria-label="Störung melden: Technische Störung oder Defekt melden">
+            <div class="card-icon" aria-hidden="true">⚠️</div>
             <h3>Störung melden</h3>
             <p>Technische Störung oder Defekt schnell und unkompliziert melden.</p>
           </a>
-          <a href="#" class="card" data-screen="fortbildung">
-            <div class="card-icon">📚</div>
+          <a href="#main-content" class="card" data-screen="fortbildung" aria-label="Fortbildung beantragen">
+            <div class="card-icon" aria-hidden="true">📚</div>
             <h3>Fortbildung beantragen</h3>
             <p>Weiterbildung oder Schulung beantragen und Genehmigung einholen.</p>
           </a>
-          <a href="#" class="card" data-screen="raum">
-            <div class="card-icon">🚪</div>
+          <a href="#main-content" class="card" data-screen="raum" aria-label="Raum buchen">
+            <div class="card-icon" aria-hidden="true">🚪</div>
             <h3>Raum buchen</h3>
             <p>Besprechungsräume und Ressourcen für Ihr Team reservieren.</p>
           </a>
-          <a href="#" class="card" data-screen="dienstreise">
-            <div class="card-icon">✈️</div>
+          <a href="#main-content" class="card" data-screen="dienstreise" aria-label="Dienstreise beantragen">
+            <div class="card-icon" aria-hidden="true">✈️</div>
             <h3>Dienstreise beantragen</h3>
             <p>Dienstreise anmelden und Genehmigungsprozess starten.</p>
           </a>
-          <a href="#" class="card" data-screen="meldung">
-            <div class="card-icon">🏥</div>
+          <a href="#main-content" class="card" data-screen="meldung" aria-label="Krank- und Gesundmeldung">
+            <div class="card-icon" aria-hidden="true">🏥</div>
             <h3>Krank- & Gesundmeldung</h3>
             <p>Arbeitsunfähigkeit melden oder Rückkehr zur Arbeit anzeigen.</p>
           </a>
@@ -1053,34 +1088,34 @@
       </section>
 
       <!-- Störung melden -->
-      <section id="screen-stoerung" class="screen">
-        <a href="#" class="back-link" data-screen="dashboard">← Zurück zur Übersicht</a>
+      <section id="screen-stoerung" class="screen" aria-labelledby="heading-stoerung">
+        <a href="#main-content" class="back-link" data-screen="dashboard">← Zurück zur Übersicht</a>
         <div class="screen-header">
-          <h2 class="screen-title">Störung melden</h2>
+          <h2 id="heading-stoerung" class="screen-title" tabindex="-1">Störung melden</h2>
           <p class="screen-subtitle">Störung melden oder Ihre Meldungen einsehen.</p>
         </div>
-        <div class="service-tabs">
-          <button type="button" class="service-tab active" data-tab-group="stoerung" data-tab="antrag">Störung melden</button>
-          <button type="button" class="service-tab" data-tab-group="stoerung" data-tab="liste">Ihre Meldungen</button>
+        <div class="service-tabs" role="tablist" aria-label="Störung: Ansicht wählen">
+          <button type="button" class="service-tab active" id="tab-stoerung-antrag" role="tab" aria-selected="true" aria-controls="stoerung-antrag" data-tab-group="stoerung" data-tab="antrag">Störung melden</button>
+          <button type="button" class="service-tab" id="tab-stoerung-liste" role="tab" aria-selected="false" aria-controls="stoerung-liste" data-tab-group="stoerung" data-tab="liste">Ihre Meldungen</button>
         </div>
-        <div id="stoerung-antrag" class="service-panel active">
+        <div id="stoerung-antrag" class="service-panel active" role="tabpanel" aria-labelledby="tab-stoerung-antrag">
           <div class="form-panel">
             <div class="form-group">
-              <label>Kategorie</label>
-              <select>
+              <label for="stoerung-kategorie">Kategorie</label>
+              <select id="stoerung-kategorie">
                 <option>IT / Hardware</option>
                 <option>IT / Software</option>
                 <option>Gebäude / Reinigung</option>
                 <option>Sonstiges</option>
               </select>
             </div>
+<div class="form-group">
+              <label for="stoerung-kurzbeschreibung">Kurzbeschreibung</label>
+              <input type="text" id="stoerung-kurzbeschreibung" placeholder="z. B. Drucker druckt nicht" />
+          </div>
             <div class="form-group">
-              <label>Kurzbeschreibung</label>
-              <input type="text" placeholder="z. B. Drucker druckt nicht" />
-            </div>
-            <div class="form-group">
-              <label>Details / Standort</label>
-              <textarea placeholder="Genauere Beschreibung, Raum, Etage …"></textarea>
+              <label for="stoerung-details">Details / Standort</label>
+              <textarea id="stoerung-details" placeholder="Genauere Beschreibung, Raum, Etage …"></textarea>
             </div>
             <div class="form-actions">
               <button type="button" class="btn btn-primary" data-submit>Störung melden</button>
@@ -1088,7 +1123,7 @@
             </div>
           </div>
         </div>
-        <div id="stoerung-liste" class="service-panel">
+        <div id="stoerung-liste" class="service-panel" role="tabpanel" aria-labelledby="tab-stoerung-liste">
           <div class="my-bookings-list">
             <div class="my-list-item stoerung-item">
               <div>
@@ -1116,17 +1151,17 @@
       </section>
 
       <!-- Fortbildung beantragen -->
-      <section id="screen-fortbildung" class="screen">
-        <a href="#" class="back-link" data-screen="dashboard">← Zurück zur Übersicht</a>
+      <section id="screen-fortbildung" class="screen" aria-labelledby="heading-fortbildung">
+        <a href="#main-content" class="back-link" data-screen="dashboard">← Zurück zur Übersicht</a>
         <div class="screen-header">
-          <h2 class="screen-title">Fortbildung</h2>
+          <h2 id="heading-fortbildung" class="screen-title" tabindex="-1">Fortbildung</h2>
           <p class="screen-subtitle">Antrag stellen oder Ihre Fortbildungsanträge einsehen.</p>
         </div>
-        <div class="service-tabs">
-          <button type="button" class="service-tab active" data-tab-group="fortbildung" data-tab="antrag">Antrag stellen</button>
-          <button type="button" class="service-tab" data-tab-group="fortbildung" data-tab="liste">Ihre Anträge</button>
+        <div class="service-tabs" role="tablist" aria-label="Fortbildung: Ansicht wählen">
+          <button type="button" class="service-tab active" id="tab-fortbildung-antrag" role="tab" aria-selected="true" aria-controls="fortbildung-antrag" data-tab-group="fortbildung" data-tab="antrag">Antrag stellen</button>
+          <button type="button" class="service-tab" id="tab-fortbildung-liste" role="tab" aria-selected="false" aria-controls="fortbildung-liste" data-tab-group="fortbildung" data-tab="liste">Ihre Anträge</button>
         </div>
-        <div id="fortbildung-antrag" class="service-panel active">
+        <div id="fortbildung-antrag" class="service-panel active" role="tabpanel" aria-labelledby="tab-fortbildung-antrag">
           <div class="form-panel">
             <div class="form-group">
               <label>Art der Fortbildung</label>
@@ -1155,7 +1190,7 @@
             </div>
           </div>
         </div>
-        <div id="fortbildung-liste" class="service-panel">
+        <div id="fortbildung-liste" class="service-panel" role="tabpanel" aria-labelledby="tab-fortbildung-liste">
           <div class="my-bookings-list">
             <div class="my-list-item fortbildung-item">
               <div>
@@ -1204,17 +1239,17 @@
       </section>
 
       <!-- Raum buchen -->
-      <section id="screen-raum" class="screen">
-        <a href="#" class="back-link" data-screen="dashboard">← Zurück zur Übersicht</a>
+      <section id="screen-raum" class="screen" aria-labelledby="heading-raum">
+        <a href="#main-content" class="back-link" data-screen="dashboard">← Zurück zur Übersicht</a>
         <div class="screen-header">
-          <h2 class="screen-title">Raum buchen</h2>
+          <h2 id="heading-raum" class="screen-title" tabindex="-1">Raum buchen</h2>
           <p class="screen-subtitle">Ihre Buchungen einsehen oder einen neuen Raum buchen.</p>
         </div>
-        <div class="service-tabs">
-          <button type="button" class="service-tab active" data-tab-group="raum" data-tab="liste">Ihre Buchungen</button>
-          <button type="button" class="service-tab" data-tab-group="raum" data-tab="antrag">Neue Buchung</button>
+        <div class="service-tabs" role="tablist" aria-label="Raumbuchung: Ansicht wählen">
+          <button type="button" class="service-tab active" id="tab-raum-liste" role="tab" aria-selected="true" aria-controls="raum-liste" data-tab-group="raum" data-tab="liste">Ihre Buchungen</button>
+          <button type="button" class="service-tab" id="tab-raum-antrag" role="tab" aria-selected="false" aria-controls="raum-antrag" data-tab-group="raum" data-tab="antrag">Neue Buchung</button>
         </div>
-        <div id="raum-liste" class="service-panel active">
+        <div id="raum-liste" class="service-panel active" role="tabpanel" aria-labelledby="tab-raum-liste">
           <div class="my-bookings">
             <h3 class="my-bookings-title">Ihre Buchungen</h3>
             <div class="my-bookings-list">
@@ -1245,7 +1280,7 @@
             </div>
           </div>
         </div>
-        <div id="raum-antrag" class="service-panel">
+        <div id="raum-antrag" class="service-panel" role="tabpanel" aria-labelledby="tab-raum-antrag">
           <div class="form-panel" style="margin-bottom: 1.5rem;">
             <div class="form-group">
               <label>Datum</label>
@@ -1258,19 +1293,19 @@
           </div>
           <p style="margin-bottom: 1rem; color: var(--text-muted); font-size: 0.9rem;">Verfügbare Räume (Klick zum Buchen)</p>
           <div class="room-grid">
-            <div class="room-card" data-room>
+            <div class="room-card" data-room role="button" tabindex="0" aria-label="Konferenzraum A buchen, EG, 12 Personen">
               <div class="name">Konferenzraum A</div>
               <div class="meta">EG, 12 Personen</div>
             </div>
-            <div class="room-card booked">
+            <div class="room-card booked" aria-disabled="true">
               <div class="name">Konferenzraum B</div>
               <div class="meta">EG, 8 Personen · belegt</div>
             </div>
-            <div class="room-card" data-room>
+            <div class="room-card" data-room role="button" tabindex="0" aria-label="Meeting 1.01 buchen, 1. OG, 6 Personen">
               <div class="name">Meeting 1.01</div>
               <div class="meta">1. OG, 6 Personen</div>
             </div>
-            <div class="room-card" data-room>
+            <div class="room-card" data-room role="button" tabindex="0" aria-label="Meeting 1.02 buchen, 1. OG, 4 Personen">
               <div class="name">Meeting 1.02</div>
               <div class="meta">1. OG, 4 Personen</div>
             </div>
@@ -1279,17 +1314,17 @@
       </section>
 
       <!-- Dienstreise beantragen -->
-      <section id="screen-dienstreise" class="screen">
-        <a href="#" class="back-link" data-screen="dashboard">← Zurück zur Übersicht</a>
+      <section id="screen-dienstreise" class="screen" aria-labelledby="heading-dienstreise">
+        <a href="#main-content" class="back-link" data-screen="dashboard">← Zurück zur Übersicht</a>
         <div class="screen-header">
-          <h2 class="screen-title">Dienstreise</h2>
+          <h2 id="heading-dienstreise" class="screen-title" tabindex="-1">Dienstreise</h2>
           <p class="screen-subtitle">Dienstreise beantragen oder Ihre Dienstreisen einsehen.</p>
         </div>
-        <div class="service-tabs">
-          <button type="button" class="service-tab active" data-tab-group="dienstreise" data-tab="antrag">Beantragen</button>
-          <button type="button" class="service-tab" data-tab-group="dienstreise" data-tab="liste">Ihre Dienstreisen</button>
+        <div class="service-tabs" role="tablist" aria-label="Dienstreise: Ansicht wählen">
+          <button type="button" class="service-tab active" id="tab-dienstreise-antrag" role="tab" aria-selected="true" aria-controls="dienstreise-antrag" data-tab-group="dienstreise" data-tab="antrag">Beantragen</button>
+          <button type="button" class="service-tab" id="tab-dienstreise-liste" role="tab" aria-selected="false" aria-controls="dienstreise-liste" data-tab-group="dienstreise" data-tab="liste">Ihre Dienstreisen</button>
         </div>
-        <div id="dienstreise-antrag" class="service-panel active">
+        <div id="dienstreise-antrag" class="service-panel active" role="tabpanel" aria-labelledby="tab-dienstreise-antrag">
           <div class="form-panel">
             <div class="form-group">
               <label>Ziel / Anlass</label>
@@ -1322,7 +1357,7 @@
             </div>
           </div>
         </div>
-        <div id="dienstreise-liste" class="service-panel">
+        <div id="dienstreise-liste" class="service-panel" role="tabpanel" aria-labelledby="tab-dienstreise-liste">
           <div class="my-bookings-list">
             <div class="my-list-item dienstreise-item">
               <div>
@@ -1371,17 +1406,17 @@
       </section>
 
       <!-- Krank- & Gesundmeldung -->
-      <section id="screen-meldung" class="screen">
-        <a href="#" class="back-link" data-screen="dashboard">← Zurück zur Übersicht</a>
+      <section id="screen-meldung" class="screen" aria-labelledby="heading-meldung">
+        <a href="#main-content" class="back-link" data-screen="dashboard">← Zurück zur Übersicht</a>
         <div class="screen-header">
-          <h2 class="screen-title">Krank- & Gesundmeldung</h2>
+          <h2 id="heading-meldung" class="screen-title" tabindex="-1">Krank- & Gesundmeldung</h2>
           <p class="screen-subtitle">Arbeitsunfähigkeit melden oder Ihre Rückkehr zur Arbeit anzeigen.</p>
         </div>
-        <div class="meldung-tabs">
-          <button type="button" class="meldung-tab active" data-meldung-tab="krank">Krankmelden</button>
-          <button type="button" class="meldung-tab" data-meldung-tab="gesund">Gesundmelden</button>
+        <div class="meldung-tabs" role="tablist" aria-label="Krank- und Gesundmeldung">
+          <button type="button" class="meldung-tab active" id="tab-meldung-krank" role="tab" aria-selected="true" aria-controls="meldung-form-krank" data-meldung-tab="krank">Krankmelden</button>
+          <button type="button" class="meldung-tab" id="tab-meldung-gesund" role="tab" aria-selected="false" aria-controls="meldung-form-gesund" data-meldung-tab="gesund">Gesundmelden</button>
         </div>
-        <div id="meldung-form-krank" class="meldung-form form-panel active">
+        <div id="meldung-form-krank" class="meldung-form form-panel active" role="tabpanel" aria-labelledby="tab-meldung-krank">
           <div class="form-group">
             <label>Krank von (Datum)</label>
             <input type="date" />
@@ -1391,8 +1426,8 @@
             <input type="date" />
           </div>
           <div class="form-group">
-            <label>Krankmeldung (Foto oder Scan)</label>
-            <div class="upload-zone" id="krank-upload-zone" role="button" tabindex="0">
+            <label for="krank-upload-input">Krankmeldung (Foto oder Scan)</label>
+            <div class="upload-zone" id="krank-upload-zone" role="button" tabindex="0" aria-label="Foto aufnehmen oder Dokument wählen. Auf dem Smartphone öffnet sich die Kamera.">
               <input type="file" id="krank-upload-input" accept="image/*" capture="environment" aria-label="Foto der Krankmeldung aufnehmen oder Datei wählen" />
               <div class="upload-zone-content" id="krank-upload-content">
                 <span class="upload-zone-icon">📷</span>
@@ -1414,7 +1449,7 @@
             <button type="button" class="btn btn-ghost" data-screen="dashboard">Abbrechen</button>
           </div>
         </div>
-        <div id="meldung-form-gesund" class="meldung-form form-panel">
+        <div id="meldung-form-gesund" class="meldung-form form-panel" role="tabpanel" aria-labelledby="tab-meldung-gesund">
           <div class="form-group">
             <label>Wieder arbeitsfähig ab (Datum)</label>
             <input type="date" />
@@ -1433,33 +1468,33 @@
   </div>
 
   <nav class="bottom-nav" aria-label="Hauptnavigation">
-    <button type="button" class="bottom-nav-item active" data-screen="dashboard">
-      <span class="nav-icon">🏠</span>
+    <button type="button" class="bottom-nav-item active" data-screen="dashboard" aria-current="page">
+      <span class="nav-icon" aria-hidden="true">🏠</span>
       Übersicht
     </button>
     <button type="button" class="bottom-nav-item" data-screen="stoerung">
-      <span class="nav-icon">⚠️</span>
+      <span class="nav-icon" aria-hidden="true">⚠️</span>
       Störung
     </button>
     <button type="button" class="bottom-nav-item" data-screen="fortbildung">
-      <span class="nav-icon">📚</span>
+      <span class="nav-icon" aria-hidden="true">📚</span>
       Fortbildung
     </button>
     <button type="button" class="bottom-nav-item" data-screen="raum">
-      <span class="nav-icon">🚪</span>
+      <span class="nav-icon" aria-hidden="true">🚪</span>
       Raum
     </button>
     <button type="button" class="bottom-nav-item" data-screen="dienstreise">
-      <span class="nav-icon">✈️</span>
+      <span class="nav-icon" aria-hidden="true">✈️</span>
       Dienstreise
     </button>
     <button type="button" class="bottom-nav-item" data-screen="meldung">
-      <span class="nav-icon">🏥</span>
+      <span class="nav-icon" aria-hidden="true">🏥</span>
       Krank
     </button>
   </nav>
 
-  <div class="toast" id="toast">Antrag wurde übermittelt.</div>
+  <div class="toast" id="toast" role="status" aria-live="polite" aria-atomic="true">Antrag wurde übermittelt.</div>
 
   <script>
     (function () {
@@ -1496,16 +1531,25 @@
 
       function showScreen(id) {
         screens.forEach(function (s) {
-          s.classList.toggle('active', s.id === 'screen-' + id);
+          var isActive = s.id === 'screen-' + id;
+          s.classList.toggle('active', isActive);
         });
         navItems.forEach(function (n) {
-          n.classList.toggle('active', n.getAttribute('data-screen') === id);
+          var isActive = n.getAttribute('data-screen') === id;
+          n.classList.toggle('active', isActive);
+          if (isActive) n.setAttribute('aria-current', 'page');
+          else n.removeAttribute('aria-current');
         });
         bottomNavItems.forEach(function (n) {
-          n.classList.toggle('active', n.getAttribute('data-screen') === id);
+          var isActive = n.getAttribute('data-screen') === id;
+          n.classList.toggle('active', isActive);
+          if (isActive) n.setAttribute('aria-current', 'page');
+          else n.removeAttribute('aria-current');
         });
         if (id !== 'dashboard') app.classList.remove('menu-hidden');
         updateMenuToggle();
+        var heading = document.getElementById('heading-' + id);
+        if (heading) heading.focus();
       }
 
       function showToast(message) {
@@ -1535,29 +1579,55 @@
         });
       });
 
+      function switchMeldungTab(tab) {
+        var id = tab.getAttribute('data-meldung-tab');
+        document.querySelectorAll('.meldung-tab').forEach(function (t) {
+          t.classList.remove('active');
+          t.setAttribute('aria-selected', 'false');
+        });
+        document.querySelectorAll('.meldung-form').forEach(function (f) { f.classList.remove('active'); });
+        tab.classList.add('active');
+        tab.setAttribute('aria-selected', 'true');
+        var form = document.getElementById('meldung-form-' + id);
+        if (form) form.classList.add('active');
+      }
+
       document.querySelectorAll('.meldung-tab').forEach(function (tab) {
-        tab.addEventListener('click', function () {
-          var id = tab.getAttribute('data-meldung-tab');
-          document.querySelectorAll('.meldung-tab').forEach(function (t) { t.classList.remove('active'); });
-          document.querySelectorAll('.meldung-form').forEach(function (f) { f.classList.remove('active'); });
-          tab.classList.add('active');
-          var form = document.getElementById('meldung-form-' + id);
-          if (form) form.classList.add('active');
+        tab.addEventListener('click', function () { switchMeldungTab(tab); });
+        tab.addEventListener('keydown', function (e) {
+          var tabs = Array.prototype.slice.call(document.querySelectorAll('.meldung-tab'));
+          var i = tabs.indexOf(tab);
+          if (e.key === 'ArrowRight' && i < tabs.length - 1) { e.preventDefault(); switchMeldungTab(tabs[i + 1]); tabs[i + 1].focus(); }
+          if (e.key === 'ArrowLeft' && i > 0) { e.preventDefault(); switchMeldungTab(tabs[i - 1]); tabs[i - 1].focus(); }
         });
       });
 
+      function switchServiceTab(tab) {
+        var group = tab.getAttribute('data-tab-group');
+        var tabId = tab.getAttribute('data-tab');
+        if (!group || !tabId) return;
+        var section = tab.closest('.screen');
+        if (!section) return;
+        section.querySelectorAll('.service-tab').forEach(function (t) {
+          t.classList.remove('active');
+          t.setAttribute('aria-selected', 'false');
+        });
+        section.querySelectorAll('.service-panel').forEach(function (p) { p.classList.remove('active'); });
+        tab.classList.add('active');
+        tab.setAttribute('aria-selected', 'true');
+        var panel = section.querySelector('#'.concat(group, '-', tabId));
+        if (panel) panel.classList.add('active');
+      }
+
       document.querySelectorAll('.service-tab').forEach(function (tab) {
-        tab.addEventListener('click', function () {
-          var group = tab.getAttribute('data-tab-group');
-          var tabId = tab.getAttribute('data-tab');
-          if (!group || !tabId) return;
-          var section = tab.closest('.screen');
-          if (!section) return;
-          section.querySelectorAll('.service-tab').forEach(function (t) { t.classList.remove('active'); });
-          section.querySelectorAll('.service-panel').forEach(function (p) { p.classList.remove('active'); });
-          tab.classList.add('active');
-          var panel = section.querySelector('#'.concat(group, '-', tabId));
-          if (panel) panel.classList.add('active');
+        tab.addEventListener('click', function () { switchServiceTab(tab); });
+        tab.addEventListener('keydown', function (e) {
+          var list = tab.closest('[role="tablist"]');
+          if (!list) return;
+          var tabs = Array.prototype.slice.call(list.querySelectorAll('[role="tab"]'));
+          var i = tabs.indexOf(tab);
+          if (e.key === 'ArrowRight' && i < tabs.length - 1) { e.preventDefault(); switchServiceTab(tabs[i + 1]); tabs[i + 1].focus(); }
+          if (e.key === 'ArrowLeft' && i > 0) { e.preventDefault(); switchServiceTab(tabs[i - 1]); tabs[i - 1].focus(); }
         });
       });
 
@@ -1614,9 +1684,16 @@
       updateMenuToggle();
 
       document.querySelectorAll('.room-card[data-room]').forEach(function (card) {
-        card.addEventListener('click', function () {
+        function bookRoom() {
           showToast('Raum wurde gebucht.');
           showScreen('dashboard');
+        }
+        card.addEventListener('click', bookRoom);
+        card.addEventListener('keydown', function (e) {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            bookRoom();
+          }
         });
       });
 
