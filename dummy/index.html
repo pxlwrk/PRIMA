@@ -1,0 +1,1574 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#0f1419" />
+  <title>PRIMA – Service-Portal</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Outfit:wght@600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #0f1419;
+      --surface: #1a2332;
+      --surface-hover: #243044;
+      --border: #2d3a4d;
+      --text: #e6edf3;
+      --text-muted: #8b9cb3;
+      --accent: #3b82f6;
+      --accent-hover: #2563eb;
+      --success: #22c55e;
+      --warning: #f59e0b;
+      --radius: 12px;
+      --radius-lg: 16px;
+      --shadow: 0 4px 24px rgba(0,0,0,0.25);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      line-height: 1.5;
+      padding-bottom: env(safe-area-inset-bottom, 0);
+    }
+
+    /* ========== MOBILE FIRST: Layout ========== */
+    .app {
+      min-height: 100vh;
+      min-height: 100dvh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .sidebar {
+      display: none;
+    }
+
+    .main {
+      flex: 1;
+      overflow-y: auto;
+      padding: 1rem 1.25rem;
+      padding-bottom: 5.5rem; /* Platz für Bottom-Nav */
+      -webkit-overflow-scrolling: touch;
+    }
+
+    /* Mobile: Top-Header */
+    .topbar {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.75rem 1.25rem;
+      padding-top: calc(0.75rem + env(safe-area-inset-top, 0));
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      margin: -1rem -1.25rem 1rem -1.25rem;
+    }
+
+    .topbar .logo {
+      font-family: 'Outfit', sans-serif;
+      font-weight: 700;
+      font-size: 1.25rem;
+      letter-spacing: -0.02em;
+    }
+
+    .topbar .logo span { color: var(--accent); }
+
+    .header-info {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 0.5rem 1rem;
+      width: 100%;
+      padding-top: 0.5rem;
+      margin-top: 0.5rem;
+      border-top: 1px solid var(--border);
+      font-size: 0.8rem;
+    }
+
+    .header-info-item {
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+      color: var(--text-muted);
+    }
+
+    .header-info-item strong {
+      color: var(--text);
+      font-weight: 600;
+    }
+
+    .user-bar {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.35rem 0.6rem;
+      background: var(--bg);
+      border-radius: var(--radius);
+      font-size: 0.8rem;
+    }
+
+    .user-bar .user-avatar {
+      width: 32px;
+      height: 32px;
+      font-size: 0.9rem;
+    }
+
+    .user-bar > div:last-child {
+      display: none; /* E-Mail auf Mobile ausblenden */
+    }
+
+    /* Menü ausblendbar (nur auf Dashboard) */
+    .menu-toggle {
+      display: none;
+      align-items: center;
+      justify-content: center;
+      width: 44px;
+      height: 44px;
+      padding: 0;
+      border: none;
+      background: var(--bg);
+      color: var(--text-muted);
+      border-radius: var(--radius);
+      cursor: pointer;
+      font-size: 1.25rem;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .menu-toggle.on-dashboard {
+      display: flex;
+    }
+
+    .menu-toggle:hover {
+      color: var(--accent);
+      background: var(--surface-hover);
+    }
+
+    .app.menu-hidden .sidebar {
+      display: none !important;
+    }
+
+    .app.menu-hidden .bottom-nav {
+      display: none !important;
+    }
+
+    .app.menu-hidden .main {
+      padding-bottom: 1rem;
+    }
+
+    @media (min-width: 768px) {
+      .app.menu-hidden .main {
+        padding-bottom: 2rem;
+      }
+    }
+
+    /* Mobile: Bottom Navigation */
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      background: var(--surface);
+      border-top: 1px solid var(--border);
+      padding: 0.5rem;
+      padding-bottom: calc(0.5rem + env(safe-area-inset-bottom, 0));
+      z-index: 50;
+    }
+
+    .bottom-nav-item {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 0.2rem;
+      padding: 0.5rem 0.25rem;
+      min-height: 48px;
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 0.7rem;
+      font-weight: 500;
+      border: none;
+      background: none;
+      cursor: pointer;
+      font: inherit;
+      transition: color 0.2s, background 0.2s;
+      border-radius: var(--radius);
+    }
+
+    .bottom-nav-item:hover,
+    .bottom-nav-item.active {
+      color: var(--accent);
+    }
+
+    .bottom-nav-item .nav-icon {
+      font-size: 1.25rem;
+    }
+
+    /* ========== DESKTOP: Sidebar + kein Bottom-Nav ========== */
+    @media (min-width: 768px) {
+      .app {
+        flex-direction: row;
+      }
+
+      .topbar .logo {
+        display: none;
+      }
+
+      .sidebar {
+        display: block;
+        width: 260px;
+        background: var(--surface);
+        border-right: 1px solid var(--border);
+        padding: 1.5rem 0;
+        flex-shrink: 0;
+      }
+
+      .logo {
+        font-family: 'Outfit', sans-serif;
+        font-weight: 700;
+        font-size: 1.5rem;
+        padding: 0 1.5rem 1.5rem;
+        border-bottom: 1px solid var(--border);
+        margin-bottom: 1rem;
+        letter-spacing: -0.02em;
+      }
+
+      .logo span { color: var(--accent); }
+
+      .nav-item {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        padding: 0.75rem 1.5rem;
+        min-height: 44px;
+        color: var(--text-muted);
+        text-decoration: none;
+        transition: background 0.2s, color 0.2s;
+        cursor: pointer;
+        border: none;
+        background: none;
+        width: 100%;
+        font: inherit;
+        text-align: left;
+      }
+
+      .nav-item:hover, .nav-item.active {
+        background: var(--surface-hover);
+        color: var(--text);
+      }
+
+      .nav-item.active { font-weight: 600; }
+
+      .nav-icon {
+        width: 20px;
+        height: 20px;
+        opacity: 0.8;
+      }
+
+      .main {
+        padding: 2rem 2.5rem;
+        padding-bottom: 2rem;
+      }
+
+      .bottom-nav {
+        display: none;
+      }
+
+.topbar {
+        flex-wrap: wrap;
+        gap: 0.75rem;
+        margin: -2rem -2.5rem 2rem -2.5rem;
+        padding: 1rem 2.5rem;
+        padding-top: 1rem;
+      }
+
+      .header-info {
+        width: auto;
+        order: 0;
+        padding-top: 0;
+        margin-top: 0;
+        border-top: none;
+        font-size: 0.85rem;
+        gap: 1.25rem;
+      }
+
+      .user-bar {
+        order: 1;
+        margin-left: auto;
+        padding: 0.5rem 1rem;
+        font-size: 0.9rem;
+      }
+
+      .user-bar .user-avatar {
+        width: 36px;
+        height: 36px;
+      }
+
+      .user-bar > div:last-child {
+        display: block;
+      }
+    }
+
+    /* Screens */
+    .screen {
+      display: none;
+      animation: fadeIn 0.25s ease;
+    }
+
+    .screen.active { display: block; }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .screen-header {
+      margin-bottom: 1.5rem;
+    }
+
+    .screen-title {
+      font-family: 'Outfit', sans-serif;
+      font-size: 1.5rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+    }
+
+    .screen-subtitle {
+      color: var(--text-muted);
+      margin-top: 0.25rem;
+      font-size: 0.9rem;
+    }
+
+    /* Dashboard – Mobile: eine Spalte */
+    .welcome {
+      margin-bottom: 1.5rem;
+    }
+
+    .welcome h1 {
+      font-family: 'Outfit', sans-serif;
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin-bottom: 0.25rem;
+    }
+
+    .welcome p {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+    }
+
+    .cards {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 1.25rem;
+      cursor: pointer;
+      transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
+      text-decoration: none;
+      color: inherit;
+      display: block;
+      text-align: left;
+      min-height: 88px; /* Touch-freundlich */
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .card:active {
+      transform: scale(0.98);
+    }
+
+    @media (min-width: 768px) {
+      .card:hover {
+        transform: translateY(-2px);
+        box-shadow: var(--shadow);
+        border-color: var(--accent);
+      }
+      .card:active {
+        transform: translateY(-2px);
+      }
+    }
+
+    .card-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: var(--radius);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 0.75rem;
+      font-size: 1.4rem;
+    }
+
+    .card:nth-child(1) .card-icon { background: rgba(239, 68, 68, 0.2); }
+    .card:nth-child(2) .card-icon { background: rgba(59, 130, 246, 0.2); }
+    .card:nth-child(3) .card-icon { background: rgba(34, 197, 94, 0.2); }
+    .card:nth-child(4) .card-icon { background: rgba(245, 158, 11, 0.2); }
+    .card:nth-child(5) .card-icon { background: rgba(168, 85, 247, 0.2); }
+
+    .card h3 {
+      font-size: 1.05rem;
+      font-weight: 600;
+      margin-bottom: 0.25rem;
+    }
+
+    .card p {
+      color: var(--text-muted);
+      font-size: 0.85rem;
+    }
+
+    @media (min-width: 768px) {
+      .screen-header { margin-bottom: 2rem; }
+      .screen-title { font-size: 1.75rem; }
+      .screen-subtitle { font-size: 0.95rem; }
+      .welcome { margin-bottom: 2rem; }
+      .welcome h1 { font-size: 1.75rem; }
+      .welcome p { font-size: 1rem; }
+      .cards {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+        gap: 1.25rem;
+      }
+      .card {
+        padding: 1.5rem;
+        min-height: auto;
+      }
+      .card h3 { font-size: 1.1rem; }
+      .card p { font-size: 0.9rem; }
+    }
+
+    /* Forms – Mobile: volle Breite, gut tippbar */
+    .form-panel {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 1.25rem;
+      width: 100%;
+    }
+
+    @media (min-width: 768px) {
+      .form-panel {
+        padding: 2rem;
+        max-width: 560px;
+      }
+    }
+
+    .form-group {
+      margin-bottom: 1.25rem;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 0.875rem;
+      font-weight: 500;
+      margin-bottom: 0.5rem;
+      color: var(--text-muted);
+    }
+
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+      width: 100%;
+      padding: 0.875rem 1rem;
+      min-height: 48px;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      color: var(--text);
+      font: inherit;
+      font-size: 16px; /* verhindert Zoom auf iOS */
+    }
+
+    .form-group input::placeholder,
+    .form-group textarea::placeholder {
+      color: var(--text-muted);
+      opacity: 0.7;
+    }
+
+    .form-group textarea {
+      min-height: 100px;
+      resize: vertical;
+      padding: 1rem;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      padding: 0.875rem 1.5rem;
+      min-height: 48px;
+      font: inherit;
+      font-weight: 600;
+      border-radius: var(--radius);
+      cursor: pointer;
+      transition: background 0.2s, transform 0.1s;
+      border: none;
+      text-decoration: none;
+      font-size: 1rem;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .btn-primary {
+      background: var(--accent);
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background: var(--accent-hover);
+      transform: translateY(-1px);
+    }
+
+    .btn-ghost {
+      background: transparent;
+      color: var(--text-muted);
+    }
+
+    .btn-ghost:hover { color: var(--text); }
+
+    .form-actions {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      margin-top: 1.5rem;
+    }
+
+    .form-actions .btn {
+      width: 100%;
+    }
+
+    @media (min-width: 768px) {
+      .form-actions {
+        flex-direction: row;
+      }
+      .form-actions .btn {
+        width: auto;
+      }
+    }
+
+    /* Raum buchen – Mobile: eine Spalte */
+    .room-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    .room-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1rem 1.25rem;
+      min-height: 64px;
+      cursor: pointer;
+      transition: border-color 0.2s, background 0.2s;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    @media (min-width: 768px) {
+      .room-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        gap: 1rem;
+      }
+      .room-card {
+        padding: 1.25rem;
+        min-height: auto;
+      }
+    }
+
+    .room-card:hover { border-color: var(--accent); }
+
+    .room-card.booked {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    .room-card .name { font-weight: 600; margin-bottom: 0.25rem; }
+    .room-card .meta { font-size: 0.85rem; color: var(--text-muted); }
+
+    /* Meine Raumbuchungen – Übersicht */
+    .my-bookings {
+      margin-bottom: 2rem;
+    }
+
+    .my-bookings-title {
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      margin-bottom: 0.75rem;
+    }
+
+    .my-bookings-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    .my-booking-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      padding: 1rem 1.25rem;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      flex-wrap: wrap;
+    }
+
+    .my-booking-item .room-name {
+      font-weight: 600;
+      margin-bottom: 0.2rem;
+    }
+
+    .my-booking-item .room-meta {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+
+    .my-booking-item .booking-datetime {
+      font-size: 0.9rem;
+      color: var(--text);
+      white-space: nowrap;
+    }
+
+    .my-booking-item .booking-cancel {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 0.25rem 0;
+      text-decoration: underline;
+      font: inherit;
+    }
+
+    .my-booking-item .booking-cancel:hover {
+      color: var(--accent);
+    }
+
+    .user-avatar {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: var(--accent);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 600;
+    }
+
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.5rem 0;
+      min-height: 44px;
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 0.9rem;
+      margin-bottom: 0.75rem;
+      transition: color 0.2s;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .back-link:hover { color: var(--accent); }
+    .back-link:active { color: var(--accent); }
+
+    /* Tabs (Krank / Gesund) */
+    .meldung-tabs {
+      display: flex;
+      gap: 0.25rem;
+      margin-bottom: 1.5rem;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 0.25rem;
+    }
+
+    .meldung-tab {
+      flex: 1;
+      padding: 0.75rem 1rem;
+      border: none;
+      background: none;
+      color: var(--text-muted);
+      font: inherit;
+      font-weight: 500;
+      font-size: 0.95rem;
+      border-radius: calc(var(--radius) - 4px);
+      cursor: pointer;
+      transition: background 0.2s, color 0.2s;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .meldung-tab.active {
+      background: var(--bg);
+      color: var(--text);
+    }
+
+    .meldung-form {
+      display: none;
+    }
+
+    .meldung-form.active {
+      display: block;
+    }
+
+    /* Einheitliche Tabs (Fortbildung, Dienstreise, Raum) */
+    .service-tabs {
+      display: flex;
+      gap: 0.25rem;
+      margin-bottom: 1.5rem;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 0.25rem;
+    }
+
+    .service-tab {
+      flex: 1;
+      padding: 0.75rem 1rem;
+      border: none;
+      background: none;
+      color: var(--text-muted);
+      font: inherit;
+      font-weight: 500;
+      font-size: 0.95rem;
+      border-radius: calc(var(--radius) - 4px);
+      cursor: pointer;
+      transition: background 0.2s, color 0.2s;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .service-tab.active {
+      background: var(--bg);
+      color: var(--text);
+    }
+
+    .service-panel {
+      display: none;
+    }
+
+    .service-panel.active {
+      display: block;
+    }
+
+    /* Listen-Einträge (Anträge / Dienstreisen – wie Buchungen) */
+    .my-list-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      padding: 1rem 1.25rem;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      flex-wrap: wrap;
+    }
+
+    .my-list-item .item-title {
+      font-weight: 600;
+      margin-bottom: 0.2rem;
+    }
+
+    .my-list-item .item-meta {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+
+    .my-list-item .item-datetime {
+      font-size: 0.9rem;
+      color: var(--text);
+      white-space: nowrap;
+    }
+
+    .my-list-item .item-status {
+      font-size: 0.8rem;
+      padding: 0.2rem 0.5rem;
+      border-radius: 4px;
+      background: var(--bg);
+      color: var(--text-muted);
+    }
+
+    .my-list-item .item-status.genehmigt {
+      background: rgba(34, 197, 94, 0.2);
+      color: var(--success);
+    }
+
+    .my-list-item .item-cancel {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 0.25rem 0;
+      text-decoration: underline;
+      font: inherit;
+    }
+
+    .my-list-item .item-cancel:hover {
+      color: var(--accent);
+    }
+
+    /* Foto-Upload Krankmeldung */
+    .upload-zone {
+      border: 2px dashed var(--border);
+      border-radius: var(--radius);
+      padding: 1.25rem;
+      text-align: center;
+      background: var(--bg);
+      cursor: pointer;
+      transition: border-color 0.2s, background 0.2s;
+      min-height: 120px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+    }
+
+    .upload-zone:hover {
+      border-color: var(--accent);
+      background: var(--surface-hover);
+    }
+
+    .upload-zone.has-file {
+      border-style: solid;
+      border-color: var(--accent);
+      padding: 0.75rem;
+    }
+
+    .upload-zone input[type="file"] {
+      position: absolute;
+      width: 0.1px;
+      height: 0.1px;
+      opacity: 0;
+      overflow: hidden;
+      z-index: -1;
+    }
+
+    .upload-zone-icon {
+      font-size: 2rem;
+    }
+
+    .upload-zone-text {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+    }
+
+    .upload-zone-text strong {
+      color: var(--text);
+    }
+
+    .upload-preview {
+      width: 100%;
+      max-height: 160px;
+      object-fit: contain;
+      border-radius: var(--radius);
+      background: var(--surface);
+    }
+
+    .upload-remove {
+      margin-top: 0.5rem;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      text-decoration: underline;
+      cursor: pointer;
+      background: none;
+      border: none;
+      font: inherit;
+      padding: 0.25rem 0;
+    }
+
+    .upload-remove:hover {
+      color: var(--accent);
+    }
+
+    /* Toast – über Bottom-Nav auf Mobile */
+    .toast {
+      position: fixed;
+      left: 1rem;
+      right: 1rem;
+      bottom: 6rem;
+      bottom: calc(5.5rem + env(safe-area-inset-bottom, 0));
+      background: var(--success);
+      color: #0f1419;
+      padding: 1rem 1.25rem;
+      border-radius: var(--radius);
+      font-weight: 500;
+      box-shadow: var(--shadow);
+      opacity: 0;
+      transform: translateY(10px);
+      transition: opacity 0.3s, transform 0.3s;
+      z-index: 100;
+      text-align: center;
+    }
+
+    @media (min-width: 768px) {
+      .toast {
+        left: auto;
+        right: 2rem;
+        bottom: 2rem;
+        padding: 1rem 1.5rem;
+      }
+    }
+
+    .toast.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <aside class="sidebar">
+      <div class="logo">PR<span>IMA</span></div>
+      <nav>
+        <button type="button" class="nav-item active" data-screen="dashboard">
+          <span class="nav-icon">🏠</span>
+          Übersicht
+        </button>
+        <button type="button" class="nav-item" data-screen="stoerung">
+          <span class="nav-icon">⚠️</span>
+          Störung melden
+        </button>
+        <button type="button" class="nav-item" data-screen="fortbildung">
+          <span class="nav-icon">📚</span>
+          Fortbildung
+        </button>
+        <button type="button" class="nav-item" data-screen="raum">
+          <span class="nav-icon">🚪</span>
+          Raum buchen
+        </button>
+        <button type="button" class="nav-item" data-screen="dienstreise">
+          <span class="nav-icon">✈️</span>
+          Dienstreise
+        </button>
+        <button type="button" class="nav-item" data-screen="meldung">
+          <span class="nav-icon">🏥</span>
+          Krank- & Gesundmeldung
+        </button>
+      </nav>
+    </aside>
+
+    <main class="main">
+      <header class="topbar">
+        <div class="logo">PR<span>IMA</span></div>
+        <button type="button" class="menu-toggle" id="menu-toggle" aria-label="Menü ausblenden" title="Menü ausblenden">
+          <span class="menu-toggle-icon" aria-hidden="true">≡</span>
+        </button>
+        <div class="user-bar">
+          <div class="user-avatar">M</div>
+          <div>
+            <div style="font-weight: 600;">Max Mustermann</div>
+            <div style="font-size: 0.8rem; color: var(--text-muted);">max.mustermann@firma.de</div>
+          </div>
+        </div>
+        <div class="header-info">
+          <span class="header-info-item" id="header-date"><span aria-hidden="true">📅</span> <strong id="header-date-text"></strong></span>
+          <span class="header-info-item"><span aria-hidden="true">🏖</span> <strong>12</strong> Urlaubstage</span>
+          <span class="header-info-item"><span aria-hidden="true">⏱</span> Gleitzeit <strong>+4,5 h</strong></span>
+        </div>
+      </header>
+      <!-- Dashboard -->
+      <section id="screen-dashboard" class="screen active">
+        <div class="welcome">
+          <h1>Willkommen zurück</h1>
+          <p>Wählen Sie einen Service – alles aus einer Hand.</p>
+        </div>
+        <div class="cards">
+          <a href="#" class="card" data-screen="stoerung">
+            <div class="card-icon">⚠️</div>
+            <h3>Störung melden</h3>
+            <p>Technische Störung oder Defekt schnell und unkompliziert melden.</p>
+          </a>
+          <a href="#" class="card" data-screen="fortbildung">
+            <div class="card-icon">📚</div>
+            <h3>Fortbildung beantragen</h3>
+            <p>Weiterbildung oder Schulung beantragen und Genehmigung einholen.</p>
+          </a>
+          <a href="#" class="card" data-screen="raum">
+            <div class="card-icon">🚪</div>
+            <h3>Raum buchen</h3>
+            <p>Besprechungsräume und Ressourcen für Ihr Team reservieren.</p>
+          </a>
+          <a href="#" class="card" data-screen="dienstreise">
+            <div class="card-icon">✈️</div>
+            <h3>Dienstreise beantragen</h3>
+            <p>Dienstreise anmelden und Genehmigungsprozess starten.</p>
+          </a>
+          <a href="#" class="card" data-screen="meldung">
+            <div class="card-icon">🏥</div>
+            <h3>Krank- & Gesundmeldung</h3>
+            <p>Arbeitsunfähigkeit melden oder Rückkehr zur Arbeit anzeigen.</p>
+          </a>
+        </div>
+      </section>
+
+      <!-- Störung melden -->
+      <section id="screen-stoerung" class="screen">
+        <a href="#" class="back-link" data-screen="dashboard">← Zurück zur Übersicht</a>
+        <div class="screen-header">
+          <h2 class="screen-title">Störung melden</h2>
+          <p class="screen-subtitle">Störung melden oder Ihre Meldungen einsehen.</p>
+        </div>
+        <div class="service-tabs">
+          <button type="button" class="service-tab active" data-tab-group="stoerung" data-tab="antrag">Störung melden</button>
+          <button type="button" class="service-tab" data-tab-group="stoerung" data-tab="liste">Ihre Meldungen</button>
+        </div>
+        <div id="stoerung-antrag" class="service-panel active">
+          <div class="form-panel">
+            <div class="form-group">
+              <label>Kategorie</label>
+              <select>
+                <option>IT / Hardware</option>
+                <option>IT / Software</option>
+                <option>Gebäude / Reinigung</option>
+                <option>Sonstiges</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Kurzbeschreibung</label>
+              <input type="text" placeholder="z. B. Drucker druckt nicht" />
+            </div>
+            <div class="form-group">
+              <label>Details / Standort</label>
+              <textarea placeholder="Genauere Beschreibung, Raum, Etage …"></textarea>
+            </div>
+            <div class="form-actions">
+              <button type="button" class="btn btn-primary" data-submit>Störung melden</button>
+              <button type="button" class="btn btn-ghost" data-screen="dashboard">Abbrechen</button>
+            </div>
+          </div>
+        </div>
+        <div id="stoerung-liste" class="service-panel">
+          <div class="my-bookings-list">
+            <div class="my-list-item stoerung-item">
+              <div>
+                <div class="item-title">Drucker druckt nicht</div>
+                <div class="item-meta">IT / Hardware · EG, Raum 101 · 20.02.2026</div>
+              </div>
+              <span class="item-status">In Bearbeitung</span>
+            </div>
+            <div class="my-list-item stoerung-item">
+              <div>
+                <div class="item-title">Beamer reagiert nicht</div>
+                <div class="item-meta">IT / Hardware · 1. OG, Konferenzraum B · 18.02.2026</div>
+              </div>
+              <span class="item-status genehmigt">Erledigt</span>
+            </div>
+            <div class="my-list-item stoerung-item">
+              <div>
+                <div class="item-title">Klimaanlage defekt</div>
+                <div class="item-meta">Gebäude / Reinigung · 2. OG, Flur · 15.02.2026</div>
+              </div>
+              <span class="item-status">Offen</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Fortbildung beantragen -->
+      <section id="screen-fortbildung" class="screen">
+        <a href="#" class="back-link" data-screen="dashboard">← Zurück zur Übersicht</a>
+        <div class="screen-header">
+          <h2 class="screen-title">Fortbildung</h2>
+          <p class="screen-subtitle">Antrag stellen oder Ihre Fortbildungsanträge einsehen.</p>
+        </div>
+        <div class="service-tabs">
+          <button type="button" class="service-tab active" data-tab-group="fortbildung" data-tab="antrag">Antrag stellen</button>
+          <button type="button" class="service-tab" data-tab-group="fortbildung" data-tab="liste">Ihre Anträge</button>
+        </div>
+        <div id="fortbildung-antrag" class="service-panel active">
+          <div class="form-panel">
+            <div class="form-group">
+              <label>Art der Fortbildung</label>
+              <select>
+                <option>Externe Schulung</option>
+                <option>Online-Kurs</option>
+                <option>Konferenz / Workshop</option>
+                <option>Sonstiges</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Bezeichnung / Anbieter</label>
+              <input type="text" placeholder="z. B. Name der Schulung oder des Anbieters" />
+            </div>
+            <div class="form-group">
+              <label>Zeitraum</label>
+              <input type="text" placeholder="z. B. 15.03. – 16.03.2026" />
+            </div>
+            <div class="form-group">
+              <label>Begründung / Nutzen</label>
+              <textarea placeholder="Kurze Begründung für die Fortbildung …"></textarea>
+            </div>
+            <div class="form-actions">
+              <button type="button" class="btn btn-primary" data-submit>Antrag stellen</button>
+              <button type="button" class="btn btn-ghost" data-screen="dashboard">Abbrechen</button>
+            </div>
+          </div>
+        </div>
+        <div id="fortbildung-liste" class="service-panel">
+          <div class="my-bookings-list">
+            <div class="my-list-item fortbildung-item">
+              <div>
+                <div class="item-title">Agile Methoden – Scrum</div>
+                <div class="item-meta">Externe Schulung · 17.03. – 18.03.2026</div>
+              </div>
+              <span class="item-status genehmigt">Genehmigt</span>
+            </div>
+            <div class="my-list-item fortbildung-item">
+              <div>
+                <div class="item-title">Sicherheitsschulung IT</div>
+                <div class="item-meta">Online-Kurs · 01.04. – 02.04.2026</div>
+              </div>
+              <span class="item-status">Offen</span>
+              <button type="button" class="item-cancel" aria-label="Antrag zurückziehen">Zurückziehen</button>
+            </div>
+            <div class="my-list-item fortbildung-item">
+              <div>
+                <div class="item-title">Projektmanagement Grundlagen</div>
+                <div class="item-meta">Konferenz · 12.02. – 13.02.2026</div>
+              </div>
+              <span class="item-status genehmigt">Genehmigt</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Raum buchen -->
+      <section id="screen-raum" class="screen">
+        <a href="#" class="back-link" data-screen="dashboard">← Zurück zur Übersicht</a>
+        <div class="screen-header">
+          <h2 class="screen-title">Raum buchen</h2>
+          <p class="screen-subtitle">Ihre Buchungen einsehen oder einen neuen Raum buchen.</p>
+        </div>
+        <div class="service-tabs">
+          <button type="button" class="service-tab active" data-tab-group="raum" data-tab="liste">Ihre Buchungen</button>
+          <button type="button" class="service-tab" data-tab-group="raum" data-tab="antrag">Neue Buchung</button>
+        </div>
+        <div id="raum-liste" class="service-panel active">
+          <div class="my-bookings">
+            <h3 class="my-bookings-title">Ihre Buchungen</h3>
+            <div class="my-bookings-list">
+              <div class="my-booking-item">
+                <div>
+                  <div class="room-name">Meeting 1.01</div>
+                  <div class="room-meta">1. OG, 6 Personen</div>
+                </div>
+                <div class="booking-datetime">Mo, 24.02.2026 · 14:00 – 16:00</div>
+                <button type="button" class="booking-cancel" aria-label="Buchung stornieren">Stornieren</button>
+              </div>
+              <div class="my-booking-item">
+                <div>
+                  <div class="room-name">Konferenzraum A</div>
+                  <div class="room-meta">EG, 12 Personen</div>
+                </div>
+                <div class="booking-datetime">Di, 25.02.2026 · 09:00 – 11:00</div>
+                <button type="button" class="booking-cancel" aria-label="Buchung stornieren">Stornieren</button>
+              </div>
+              <div class="my-booking-item">
+                <div>
+                  <div class="room-name">Meeting 1.02</div>
+                  <div class="room-meta">1. OG, 4 Personen</div>
+                </div>
+                <div class="booking-datetime">Mi, 26.02.2026 · 10:00 – 12:00</div>
+                <button type="button" class="booking-cancel" aria-label="Buchung stornieren">Stornieren</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div id="raum-antrag" class="service-panel">
+          <div class="form-panel" style="margin-bottom: 1.5rem;">
+            <div class="form-group">
+              <label>Datum</label>
+              <input type="date" value="2026-02-24" />
+            </div>
+            <div class="form-group">
+              <label>Uhrzeit</label>
+              <input type="text" placeholder="z. B. 14:00 – 16:00" value="14:00 – 16:00" />
+            </div>
+          </div>
+          <p style="margin-bottom: 1rem; color: var(--text-muted); font-size: 0.9rem;">Verfügbare Räume (Klick zum Buchen)</p>
+          <div class="room-grid">
+            <div class="room-card" data-room>
+              <div class="name">Konferenzraum A</div>
+              <div class="meta">EG, 12 Personen</div>
+            </div>
+            <div class="room-card booked">
+              <div class="name">Konferenzraum B</div>
+              <div class="meta">EG, 8 Personen · belegt</div>
+            </div>
+            <div class="room-card" data-room>
+              <div class="name">Meeting 1.01</div>
+              <div class="meta">1. OG, 6 Personen</div>
+            </div>
+            <div class="room-card" data-room>
+              <div class="name">Meeting 1.02</div>
+              <div class="meta">1. OG, 4 Personen</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Dienstreise beantragen -->
+      <section id="screen-dienstreise" class="screen">
+        <a href="#" class="back-link" data-screen="dashboard">← Zurück zur Übersicht</a>
+        <div class="screen-header">
+          <h2 class="screen-title">Dienstreise</h2>
+          <p class="screen-subtitle">Dienstreise beantragen oder Ihre Dienstreisen einsehen.</p>
+        </div>
+        <div class="service-tabs">
+          <button type="button" class="service-tab active" data-tab-group="dienstreise" data-tab="antrag">Beantragen</button>
+          <button type="button" class="service-tab" data-tab-group="dienstreise" data-tab="liste">Ihre Dienstreisen</button>
+        </div>
+        <div id="dienstreise-antrag" class="service-panel active">
+          <div class="form-panel">
+            <div class="form-group">
+              <label>Ziel / Anlass</label>
+              <input type="text" placeholder="z. B. Kundenbesuch München" />
+            </div>
+            <div class="form-group">
+              <label>Reisedatum</label>
+              <input type="date" />
+            </div>
+            <div class="form-group">
+              <label>Rückreise (optional)</label>
+              <input type="date" />
+            </div>
+            <div class="form-group">
+              <label>Verkehrsmittel</label>
+              <select>
+                <option>Bahn</option>
+                <option>Pkw</option>
+                <option>Flug</option>
+                <option>Mischung</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Anmerkungen</label>
+              <textarea placeholder="Weitere Angaben zur Dienstreise …"></textarea>
+            </div>
+            <div class="form-actions">
+              <button type="button" class="btn btn-primary" data-submit>Dienstreise beantragen</button>
+              <button type="button" class="btn btn-ghost" data-screen="dashboard">Abbrechen</button>
+            </div>
+          </div>
+        </div>
+        <div id="dienstreise-liste" class="service-panel">
+          <div class="my-bookings-list">
+            <div class="my-list-item dienstreise-item">
+              <div>
+                <div class="item-title">Kundenbesuch München</div>
+                <div class="item-meta">Bahn · 24.02. – 25.02.2026</div>
+              </div>
+              <span class="item-status genehmigt">Genehmigt</span>
+            </div>
+            <div class="my-list-item dienstreise-item">
+              <div>
+                <div class="item-title">Messe Hannover</div>
+                <div class="item-meta">Pkw · 10.03. – 12.03.2026</div>
+              </div>
+              <span class="item-status">Offen</span>
+              <button type="button" class="item-cancel" aria-label="Dienstreise stornieren">Stornieren</button>
+            </div>
+            <div class="my-list-item dienstreise-item">
+              <div>
+                <div class="item-title">Schulung Berlin</div>
+                <div class="item-meta">Bahn · 05.02. – 06.02.2026</div>
+              </div>
+              <span class="item-status genehmigt">Genehmigt</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Krank- & Gesundmeldung -->
+      <section id="screen-meldung" class="screen">
+        <a href="#" class="back-link" data-screen="dashboard">← Zurück zur Übersicht</a>
+        <div class="screen-header">
+          <h2 class="screen-title">Krank- & Gesundmeldung</h2>
+          <p class="screen-subtitle">Arbeitsunfähigkeit melden oder Ihre Rückkehr zur Arbeit anzeigen.</p>
+        </div>
+        <div class="meldung-tabs">
+          <button type="button" class="meldung-tab active" data-meldung-tab="krank">Krankmelden</button>
+          <button type="button" class="meldung-tab" data-meldung-tab="gesund">Gesundmelden</button>
+        </div>
+        <div id="meldung-form-krank" class="meldung-form form-panel active">
+          <div class="form-group">
+            <label>Krank von (Datum)</label>
+            <input type="date" />
+          </div>
+          <div class="form-group">
+            <label>Voraussichtlich bis (Datum)</label>
+            <input type="date" />
+          </div>
+          <div class="form-group">
+            <label>Krankmeldung (Foto oder Scan)</label>
+            <div class="upload-zone" id="krank-upload-zone" role="button" tabindex="0">
+              <input type="file" id="krank-upload-input" accept="image/*" capture="environment" aria-label="Foto der Krankmeldung aufnehmen oder Datei wählen" />
+              <div class="upload-zone-content" id="krank-upload-content">
+                <span class="upload-zone-icon">📷</span>
+                <p class="upload-zone-text"><strong>Foto aufnehmen</strong> oder Dokument wählen</p>
+                <p class="upload-zone-text" style="font-size: 0.8rem;">Auf dem Smartphone öffnet sich die Kamera</p>
+              </div>
+              <div class="upload-zone-preview" id="krank-upload-preview" style="display: none;">
+                <img class="upload-preview" id="krank-upload-img" alt="Vorschau" />
+                <button type="button" class="upload-remove" id="krank-upload-remove">Foto entfernen</button>
+              </div>
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Anmerkung (optional)</label>
+            <textarea placeholder="z. B. voraussichtliche Dauer, Hinweise …" rows="3"></textarea>
+          </div>
+          <div class="form-actions">
+            <button type="button" class="btn btn-primary" data-submit data-meldung-type="krank">Krankmeldung absenden</button>
+            <button type="button" class="btn btn-ghost" data-screen="dashboard">Abbrechen</button>
+          </div>
+        </div>
+        <div id="meldung-form-gesund" class="meldung-form form-panel">
+          <div class="form-group">
+            <label>Wieder arbeitsfähig ab (Datum)</label>
+            <input type="date" />
+          </div>
+          <div class="form-group">
+            <label>Anmerkung (optional)</label>
+            <textarea placeholder="z. B. Hinweise für die Rückkehr …" rows="3"></textarea>
+          </div>
+          <div class="form-actions">
+            <button type="button" class="btn btn-primary" data-submit data-meldung-type="gesund">Gesundmeldung absenden</button>
+            <button type="button" class="btn btn-ghost" data-screen="dashboard">Abbrechen</button>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <nav class="bottom-nav" aria-label="Hauptnavigation">
+    <button type="button" class="bottom-nav-item active" data-screen="dashboard">
+      <span class="nav-icon">🏠</span>
+      Übersicht
+    </button>
+    <button type="button" class="bottom-nav-item" data-screen="stoerung">
+      <span class="nav-icon">⚠️</span>
+      Störung
+    </button>
+    <button type="button" class="bottom-nav-item" data-screen="fortbildung">
+      <span class="nav-icon">📚</span>
+      Fortbildung
+    </button>
+    <button type="button" class="bottom-nav-item" data-screen="raum">
+      <span class="nav-icon">🚪</span>
+      Raum
+    </button>
+    <button type="button" class="bottom-nav-item" data-screen="dienstreise">
+      <span class="nav-icon">✈️</span>
+      Dienstreise
+    </button>
+    <button type="button" class="bottom-nav-item" data-screen="meldung">
+      <span class="nav-icon">🏥</span>
+      Krank
+    </button>
+  </nav>
+
+  <div class="toast" id="toast">Antrag wurde übermittelt.</div>
+
+  <script>
+    (function () {
+      var dateEl = document.getElementById('header-date-text');
+      if (dateEl) {
+        var d = new Date();
+        dateEl.textContent = d.toLocaleDateString('de-DE', { weekday: 'short', day: '2-digit', month: '2-digit', year: 'numeric' });
+      }
+    })();
+    (function () {
+      const screens = document.querySelectorAll('.screen');
+      const navItems = document.querySelectorAll('.nav-item[data-screen]');
+      const bottomNavItems = document.querySelectorAll('.bottom-nav-item[data-screen]');
+      const cardsAndLinks = document.querySelectorAll('[data-screen]');
+
+      var app = document.querySelector('.app');
+      var menuToggle = document.getElementById('menu-toggle');
+      var menuToggleIcon = menuToggle && menuToggle.querySelector('.menu-toggle-icon');
+
+      function updateMenuToggle() {
+        if (!menuToggle || !menuToggleIcon) return;
+        var isDashboard = document.getElementById('screen-dashboard').classList.contains('active');
+        if (isDashboard) {
+          menuToggle.classList.add('on-dashboard');
+          var hidden = app.classList.contains('menu-hidden');
+          menuToggleIcon.textContent = hidden ? '\u2261' : '\u2715';
+          menuToggle.setAttribute('aria-label', hidden ? 'Menü einblenden' : 'Menü ausblenden');
+          menuToggle.title = hidden ? 'Menü einblenden' : 'Menü ausblenden';
+        } else {
+          menuToggle.classList.remove('on-dashboard');
+          app.classList.remove('menu-hidden');
+        }
+      }
+
+      function showScreen(id) {
+        screens.forEach(function (s) {
+          s.classList.toggle('active', s.id === 'screen-' + id);
+        });
+        navItems.forEach(function (n) {
+          n.classList.toggle('active', n.getAttribute('data-screen') === id);
+        });
+        bottomNavItems.forEach(function (n) {
+          n.classList.toggle('active', n.getAttribute('data-screen') === id);
+        });
+        if (id !== 'dashboard') app.classList.remove('menu-hidden');
+        updateMenuToggle();
+      }
+
+      function showToast(message) {
+        var t = document.getElementById('toast');
+        t.textContent = message || 'Erfolgreich übermittelt.';
+        t.classList.add('show');
+        setTimeout(function () { t.classList.remove('show'); }, 3000);
+      }
+
+      cardsAndLinks.forEach(function (el) {
+        el.addEventListener('click', function (e) {
+          var screen = el.getAttribute('data-screen');
+          if (screen) {
+            e.preventDefault();
+            showScreen(screen);
+          }
+        });
+      });
+
+      document.querySelectorAll('[data-submit]').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          var type = btn.getAttribute('data-meldung-type');
+          if (type === 'krank') showToast('Krankmeldung wurde übermittelt.');
+          else if (type === 'gesund') showToast('Gesundmeldung wurde übermittelt.');
+          else showToast('Antrag wurde übermittelt.');
+          showScreen('dashboard');
+        });
+      });
+
+      document.querySelectorAll('.meldung-tab').forEach(function (tab) {
+        tab.addEventListener('click', function () {
+          var id = tab.getAttribute('data-meldung-tab');
+          document.querySelectorAll('.meldung-tab').forEach(function (t) { t.classList.remove('active'); });
+          document.querySelectorAll('.meldung-form').forEach(function (f) { f.classList.remove('active'); });
+          tab.classList.add('active');
+          var form = document.getElementById('meldung-form-' + id);
+          if (form) form.classList.add('active');
+        });
+      });
+
+      document.querySelectorAll('.service-tab').forEach(function (tab) {
+        tab.addEventListener('click', function () {
+          var group = tab.getAttribute('data-tab-group');
+          var tabId = tab.getAttribute('data-tab');
+          if (!group || !tabId) return;
+          var section = tab.closest('.screen');
+          if (!section) return;
+          section.querySelectorAll('.service-tab').forEach(function (t) { t.classList.remove('active'); });
+          section.querySelectorAll('.service-panel').forEach(function (p) { p.classList.remove('active'); });
+          tab.classList.add('active');
+          var panel = section.querySelector('#'.concat(group, '-', tabId));
+          if (panel) panel.classList.add('active');
+        });
+      });
+
+      (function () {
+        var zone = document.getElementById('krank-upload-zone');
+        var input = document.getElementById('krank-upload-input');
+        var content = document.getElementById('krank-upload-content');
+        var preview = document.getElementById('krank-upload-preview');
+        var img = document.getElementById('krank-upload-img');
+        var removeBtn = document.getElementById('krank-upload-remove');
+        var currentUrl = null;
+
+        function showPreview(file) {
+          if (currentUrl) URL.revokeObjectURL(currentUrl);
+          currentUrl = URL.createObjectURL(file);
+          img.src = currentUrl;
+          content.style.display = 'none';
+          preview.style.display = 'block';
+          zone.classList.add('has-file');
+        }
+
+        function clearPreview() {
+          if (currentUrl) {
+            URL.revokeObjectURL(currentUrl);
+            currentUrl = null;
+          }
+          img.src = '';
+          input.value = '';
+          content.style.display = '';
+          preview.style.display = 'none';
+          zone.classList.remove('has-file');
+        }
+
+        zone.addEventListener('click', function (e) {
+          if (!e.target.closest('.upload-remove')) input.click();
+        });
+        zone.addEventListener('keydown', function (e) {
+          if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); input.click(); }
+        });
+        input.addEventListener('change', function () {
+          var file = input.files && input.files[0];
+          if (file && file.type.indexOf('image/') === 0) showPreview(file);
+        });
+        removeBtn.addEventListener('click', function (e) { e.stopPropagation(); clearPreview(); });
+      })();
+
+      if (menuToggle) {
+        menuToggle.addEventListener('click', function () {
+          if (!document.getElementById('screen-dashboard').classList.contains('active')) return;
+          app.classList.toggle('menu-hidden');
+          updateMenuToggle();
+        });
+      }
+      updateMenuToggle();
+
+      document.querySelectorAll('.room-card[data-room]').forEach(function (card) {
+        card.addEventListener('click', function () {
+          showToast('Raum wurde gebucht.');
+          showScreen('dashboard');
+        });
+      });
+
+      document.querySelectorAll('.booking-cancel').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          showToast('Buchung wurde storniert.');
+          btn.closest('.my-booking-item').remove();
+        });
+      });
+
+      document.querySelectorAll('.fortbildung-item .item-cancel').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          showToast('Antrag wurde zurückgezogen.');
+          btn.closest('.my-list-item').remove();
+        });
+      });
+
+      document.querySelectorAll('.dienstreise-item .item-cancel').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          showToast('Dienstreise wurde storniert.');
+          btn.closest('.my-list-item').remove();
+        });
+      });
+    })();
+  </script>
+</body>
+</html>
